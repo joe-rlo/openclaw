@@ -26,6 +26,7 @@ export const DEFAULT_IDENTITY_FILENAME = "IDENTITY.md";
 export const DEFAULT_USER_FILENAME = "USER.md";
 export const DEFAULT_HEARTBEAT_FILENAME = "HEARTBEAT.md";
 export const DEFAULT_BOOTSTRAP_FILENAME = "BOOTSTRAP.md";
+export const DEFAULT_BRIEFING_FILENAME = "BRIEFING.md";
 export const DEFAULT_MEMORY_FILENAME = "MEMORY.md";
 export const DEFAULT_MEMORY_ALT_FILENAME = "memory.md";
 
@@ -64,6 +65,7 @@ export type WorkspaceBootstrapFileName =
   | typeof DEFAULT_USER_FILENAME
   | typeof DEFAULT_HEARTBEAT_FILENAME
   | typeof DEFAULT_BOOTSTRAP_FILENAME
+  | typeof DEFAULT_BRIEFING_FILENAME
   | typeof DEFAULT_MEMORY_FILENAME
   | typeof DEFAULT_MEMORY_ALT_FILENAME;
 
@@ -257,6 +259,15 @@ export async function loadWorkspaceBootstrapFiles(dir: string): Promise<Workspac
       filePath: path.join(resolvedDir, DEFAULT_BOOTSTRAP_FILENAME),
     },
   ];
+
+  // BRIEFING.md is optional — only include if it exists (no [MISSING] placeholder)
+  const briefingPath = path.join(resolvedDir, DEFAULT_BRIEFING_FILENAME);
+  try {
+    await fs.access(briefingPath);
+    entries.push({ name: DEFAULT_BRIEFING_FILENAME, filePath: briefingPath });
+  } catch {
+    // BRIEFING.md is purely optional; skip silently when absent
+  }
 
   entries.push(...(await resolveMemoryBootstrapEntries(resolvedDir)));
 
