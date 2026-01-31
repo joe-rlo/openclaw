@@ -31,46 +31,38 @@ Four lifecycle hooks that enforce consistency during agent runs:
 
 ## Quick Start
 
-### Installation
+### One-Command Setup
 
-The skill includes three Python scripts in `scripts/`:
-- `memory-extract.py` — Fact extraction
-- `memory-link.py` — Knowledge graph building
-- `memory-briefing.py` — Daily briefing generation
+```bash
+clawhub install memory-pipeline
+bash skills/memory-pipeline/scripts/setup.sh
+```
 
-All scripts auto-detect your workspace from:
-1. `CLAWDBOT_WORKSPACE` environment variable
-2. Current working directory (if contains SOUL.md or AGENTS.md)
-3. `~/.clawdbot/workspace` (default fallback)
+The setup script will:
+- Detect your workspace automatically
+- Check for Python 3 and an LLM API key
+- Create the `memory/` directory
+- Find existing notes or help you create a starter note
+- Run the full pipeline (extract → link → briefing)
+- Show you what was generated and what to do next
 
 ### Requirements
 
-**At least one LLM API key** is required:
-- OpenAI API key (for GPT-4o-mini + embeddings)
-- Anthropic API key (for Claude Haiku)
-- Gemini API key (for Gemini Flash)
+**Python 3** and **at least one LLM API key**:
+- OpenAI (`OPENAI_API_KEY` or `~/.config/openai/api_key`)
+- Anthropic (`ANTHROPIC_API_KEY` or `~/.config/anthropic/api_key`)
+- Gemini (`GEMINI_API_KEY` or `~/.config/gemini/api_key`)
 
-Set via environment variable or config file:
+The scripts auto-detect whichever key is available.
+
+### Manual Usage
+
+If you prefer to run steps individually:
 ```bash
-# Environment variable
-export OPENAI_API_KEY="sk-..."
-
-# OR config file
-echo "sk-..." > ~/.config/openai/api_key
+python3 skills/memory-pipeline/scripts/memory-extract.py
+python3 skills/memory-pipeline/scripts/memory-link.py
+python3 skills/memory-pipeline/scripts/memory-briefing.py
 ```
-
-The scripts will auto-detect and use whichever API key is available.
-
-### Basic Usage
-
-Run the full pipeline:
-```bash
-python3 scripts/memory-extract.py
-python3 scripts/memory-link.py
-python3 scripts/memory-briefing.py
-```
-
-Or run individual steps as needed.
 
 ## Pipeline Stages
 
